@@ -1,6 +1,6 @@
 {
   "name": "mongodb-analytics",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
   "author": {
     "name": "Manoj Barman",
@@ -52,6 +52,7 @@
     "typescript",
     "vite",
     "chart.js",
-    "chatgpt"
+    "chatgpt",
+    "tailwindcss"
   ]
 }
