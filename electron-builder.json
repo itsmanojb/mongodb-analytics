@@ -1,0 +1,15 @@
+{
+  "appId": "com.mongodb.analytics",
+  "productName": "MongoDB Analytics",
+  "directories": {
+    "buildResources": "assets",
+    "output": "dist"
+  },
+  "files": ["dist", "main.js", "preload.js", "db/"],
+  "mac": {
+    "target": "dmg"
+  },
+  "win": {
+    "target": "nsis"
+  }
+}

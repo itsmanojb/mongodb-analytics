@@ -2,29 +2,35 @@
   "name": "mongodb-analytics",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
   "author": {
     "name": "Manoj Barman",
     "url": "https://manojbarman.in"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-app": "vite build && electron-builder",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "watch:electron": "tsc -p tsconfig.electron.json --watch",
+    "dev": "concurrently \"vite\" \"electron .\"",
+    "build": "vite build && electron-builder"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.4",
     "chart.js": "^4.4.9",
     "electron": "^35.2.0",
     "electron-store": "^10.0.1",
     "mongodb": "^6.15.0",
+    "postcss": "^8.5.3",
     "react": "^19.0.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
+    "@types/node": "^22.14.1",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.3.4",
     "concurrently": "^9.1.2",
     "electron-builder": "^26.0.12",
@@ -32,10 +38,12 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "tailwindcss": "^4.1.4",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
   },
+  "main": "dist/main.js",
   "keywords": [
     "react",
     "mongodb",
