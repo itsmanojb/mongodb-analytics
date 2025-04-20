@@ -13,7 +13,7 @@ export default function App() {
   };
 
   return (
-    <div className="p-6 font-sans">
+    <div className="min-h-screen bg-neutral-50 p-4">
       {!connected ? (
         <ConnectForm onConnected={handleConnected} />
       ) : (

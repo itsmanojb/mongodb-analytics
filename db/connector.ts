@@ -9,13 +9,17 @@ export async function connect(uri: string) {
 
 export async function getDatabases() {
   const admin = client.db().admin();
-  const result = await admin.listDatabases();
+  const result = await admin.listDatabases({
+    filter: { name: { $not: /^local$/ } }, // Exclude the 'local' database
+  });
   return result.databases;
 }
 
 export async function getDBStats(dbName: string) {
   const db: Db = client.db(dbName);
-  const stats = await db.stats();
+  const stats = await db.stats({
+    scale: 1024,
+  });
   const collections = await db.listCollections().toArray();
 
   const collectionsStats = await Promise.all(
