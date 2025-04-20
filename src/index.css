@@ -6,6 +6,11 @@
   font-weight: 400;
 
   color-scheme: light dark;
+  background-color: light-dark(
+    var(--color-neutral-50),
+    var(--color-neutral-800)
+  );
+  color: light-dark(var(--color-gray-800), var(--color-gray-50));
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,6 +20,6 @@
 
 @layer components {
   .btn-primary {
-    @apply rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:ring-2 ring-offset-1 outline-none ring-green-600 hover:bg-green-900 cursor-pointer disabled:pointer-events-none disabled:opacity-50;
+    @apply rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white not-dark:shadow-sm focus-visible:ring-2 outline-none ring-green-600 hover:bg-green-900 cursor-pointer disabled:pointer-events-none disabled:opacity-50;
   }
 }

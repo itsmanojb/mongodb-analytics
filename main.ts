@@ -5,9 +5,9 @@ import fs from "fs";
 
 function createWindow() {
   const window = new BrowserWindow({
-    width: 800,
-    height: 600,
-    minWidth: 400,
+    width: 1200,
+    height: 800,
+    minWidth: 600,
     minHeight: 300,
     center: true,
     webPreferences: {

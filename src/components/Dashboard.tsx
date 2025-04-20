@@ -9,20 +9,18 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { useAppContext } from "../hooks/appContext";
+import DatabaseList from "./DatabaseList";
 
-interface CollectionStats {
+export interface CollectionStats {
   name: string;
   size: number;
   count: number;
 }
 
-interface DBStats {
+export interface DBStats {
   dbStats: any;
   collections: CollectionStats[];
-}
-
-interface Props {
-  selectedDb: string;
 }
 
 ChartJS.register(
@@ -38,22 +36,29 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      position: "top" as const,
+      position: "bottom" as const,
     },
-    title: {
+  },
+  scales: {
+    x: {
       display: true,
-      text: "Chart.js Bar Chart",
+    },
+    y: {
+      display: true,
     },
   },
 };
 
-export default function Dashboard({ selectedDb }: Props) {
+export default function Dashboard() {
+  const {
+    state: { databases, selectedDb, connectionName, connectionUri },
+    dispatch,
+  } = useAppContext();
   const [stats, setStats] = useState<DBStats | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
-      const data = await window.api.getDBStats(selectedDb);
-      console.log("data", data);
+      const data = await window.api.getDBStats(selectedDb!);
       setStats(data);
     };
 
@@ -62,28 +67,90 @@ export default function Dashboard({ selectedDb }: Props) {
     return () => clearInterval(interval);
   }, [selectedDb]);
 
-  if (!stats) return <div>Loading dashboard...</div>;
+  if (!stats)
+    return (
+      <div className="h-screen grid place-content-center">
+        Loading statistics...
+      </div>
+    );
 
-  const chartData = {
+  const chartDataSize = {
     labels: stats.collections.map((c) => c.name),
     datasets: [
       {
-        label: "Collection Size (Bytes)",
-        data: stats.collections.map((c) => c.size),
-        backgroundColor: "rgba(75,192,192,0.6)",
+        label: "Collection Size (KB)",
+        data: stats.collections.map((c) => c.size / 1024),
+        backgroundColor: "#016630",
+        borderRadius: 0,
+        stack: "Stack 0",
+      },
+    ],
+  };
+
+  const chartDataCount = {
+    labels: stats.collections.map((c) => c.name),
+    datasets: [
+      {
+        label: "Documents",
+        data: stats.collections.map((c) => c.count),
+        backgroundColor: "rgb(75, 192, 192)",
+        borderRadius: 0,
+        stack: "Stack 1",
       },
     ],
   };
 
   return (
-    <div className="mt-4 space-y-4">
-      <h2 className="text-xl font-semibold">Dashboard - {selectedDb}</h2>
-      <Bar options={options} data={chartData} />
-      <button
-        onClick={() => window.api.exportStats(stats)}
-        className="btn-primary">
-        Export Stats
-      </button>
+    <div className="flex h-full">
+      <aside className="min-w-[240px] w-1/5 border-r border-gray-50 dark:border-neutral-700 overflow-auto shrink-0">
+        <div className="bg-green-800 text-white p-6">
+          <h2 className="font-semibold text-lg">
+            {connectionName?.split(":")[0]}
+          </h2>
+          <p className="text-xs truncate">{connectionUri}</p>
+        </div>
+
+        {selectedDb && (
+          <DatabaseList
+            databases={databases}
+            selectedDb={selectedDb}
+            stats={stats}
+            onDBChange={(db) =>
+              dispatch({ type: "SET_SELECTED_DB", payload: db })
+            }
+          />
+        )}
+      </aside>
+      <main className="overflow-x-auto grow">
+        <div className="flex p-6 items-center justify-between">
+          <h2 className="text-xl font-semibold">Database [{selectedDb}]</h2>
+          <button
+            onClick={() => window.api.exportStats(stats)}
+            className="btn-primary">
+            Export
+          </button>
+        </div>
+        <section className="p-6 space-y-10">
+          <div className="px-10">
+            <Bar
+              options={{
+                ...options,
+                indexAxis: "y",
+              }}
+              data={chartDataSize}
+            />
+          </div>
+          <div className="px-10">
+            <Bar
+              options={{
+                ...options,
+                indexAxis: "y",
+              }}
+              data={chartDataCount}
+            />
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

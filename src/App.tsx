@@ -1,23 +1,19 @@
-import { useState } from "react";
 import ConnectForm from "./components/ConnectForm";
 import Dashboard from "./components/Dashboard";
+import DatabaseSelector from "./components/DatabaseSelector";
+import { useAppContext } from "./hooks/appContext";
 
 export default function App() {
-  const [connected, setConnected] = useState(false);
-  const [selectedDb, setSelectedDb] = useState<string | null>(null);
-
-  const handleConnected = async (defaultDb: string) => {
-    setSelectedDb(defaultDb);
-    console.log("defaultDb", defaultDb);
-    setConnected(true);
-  };
+  const {
+    state: { connected, selectedDb },
+  } = useAppContext();
 
   return (
-    <div className="min-h-screen bg-neutral-50 p-4">
+    <div className="h-screen overflow-x-clip">
       {!connected ? (
-        <ConnectForm onConnected={handleConnected} />
+        <ConnectForm />
       ) : (
-        selectedDb && <Dashboard selectedDb={selectedDb} />
+        <>{!selectedDb ? <DatabaseSelector /> : <Dashboard />}</>
       )}
     </div>
   );

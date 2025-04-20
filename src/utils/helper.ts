@@ -1,3 +1,7 @@
+export function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export function formatSize(size: number): string {
   if (size < 1024) {
     return size + " B";
