@@ -1,4 +1,13 @@
 import { useEffect, useState } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import { Bar } from "react-chartjs-2";
 
 interface CollectionStats {
@@ -16,12 +25,35 @@ interface Props {
   selectedDb: string;
 }
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+    title: {
+      display: true,
+      text: "Chart.js Bar Chart",
+    },
+  },
+};
+
 export default function Dashboard({ selectedDb }: Props) {
   const [stats, setStats] = useState<DBStats | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       const data = await window.api.getDBStats(selectedDb);
+      console.log("data", data);
       setStats(data);
     };
 
@@ -46,10 +78,10 @@ export default function Dashboard({ selectedDb }: Props) {
   return (
     <div className="mt-4 space-y-4">
       <h2 className="text-xl font-semibold">Dashboard - {selectedDb}</h2>
-      <Bar data={chartData} />
+      <Bar options={options} data={chartData} />
       <button
         onClick={() => window.api.exportStats(stats)}
-        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        className="btn-primary">
         Export Stats
       </button>
     </div>

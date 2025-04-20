@@ -80,7 +80,7 @@ export default function ConnectForm({ onConnected }: Props) {
             type="button"
             onClick={handleConnect}
             disabled={loading}
-            className="rounded-md bg-green-800 px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:ring-2 ring-offset-1 outline-none ring-green-600 hover:bg-green-900 cursor-pointer">
+            className="btn-primary">
             {loading ? "Connecting..." : "Connect"}
           </button>
         </div>
